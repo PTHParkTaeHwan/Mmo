@@ -6,6 +6,8 @@
 #include <SpawnMine.h>
 #include "Components/WidgetComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Animation/SkeletalMeshActor.h"
+#include "MessageWidget.h"
 
 
 // Sets default values
@@ -72,6 +74,15 @@ AFirstCharacter::AFirstCharacter()
 	ChatText->SetRelativeLocation(FVector(0, 0, 100));
 	ChatText->SetHorizontalAlignment(EHTA_Center);
 	ChatText->SetupAttachment(RootComponent);
+
+
+	/*MessageWidget = CreateDefaultSubobject<UMessageWidget>(TEXT("MESSAGEWIDGET"));
+	static ConstructorHelpers::FClassFinder<UMessageWidget> UI_MESSAGE_C(TEXT("/Game/Dev/Message.Message_C"));
+	if (UI_MESSAGE_C.Succeeded())
+	{
+		MessageWidgetClass = UI_MESSAGE_C.Class;
+	}*/
+
 }
 
 
@@ -79,9 +90,7 @@ AFirstCharacter::AFirstCharacter()
 void AFirstCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentMessage = "";
-	
-	
+	CurrentMessage = "";	
 }
 
 // Called every frame
@@ -107,7 +116,6 @@ void AFirstCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void AFirstCharacter::UpDown(float NewAxisValue)
 {
 	AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X), NewAxisValue);
-
 }
 void AFirstCharacter::LeftRight(float NewAxisValue)
 {
@@ -130,21 +138,7 @@ void AFirstCharacter::Bomb()
 	if (HasAuthority())
 	{
 		ServerSpawn();
-		TLOG(Warning, TEXT("bomb"));
 	}
-	
-	/*
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = this;
-	SpawnParams.Instigator = GetInstigator();
-	
-	UWorld* World = GetWorld();
-	FVector PlayForward = GetActorLocation() + GetActorForwardVector()*410.0f;
-	PlayForward.Z = PlayForward.Z + 50.0f;
-	Mine = World->SpawnActor<ASpawnMine>(MineClass, PlayForward, GetActorRotation(), SpawnParams);
-	*/
-	
-
 }
 
 void AFirstCharacter::ServerSpawn_Implementation()
@@ -213,6 +207,44 @@ bool AFirstCharacter::SeverSendChatMessage_Validate(const FString& Message)
 	}
 	else return false;
 }
+
+void AFirstCharacter::SeverSendChatMessage2_Implementation(const FString& Message)
+{
+	ServerChatMessageMulticast(Message);
+}
+bool AFirstCharacter::SeverSendChatMessage2_Validate(const FString& Message)
+{
+	if (Message.Len() < 255)
+	{
+		return true;
+	}
+	else return false;
+}
+
+void AFirstCharacter::ServerChatMessageMulticast_Implementation(const FString& Message)
+{
+	/*for (TActorIterator<AFirstCharacter> It(GetWorld()); It; ++It)
+	{
+		
+	}
+	*/
+
+	//MessageWidget = CreateWidget<UMessageWidget>(GetController(), MessageWidgetClass);
+	//MessageWidget->AddToViewport(3);
+	//MessageWidget->SetMessage(GetName() ,Message);
+
+
+}
+
+bool AFirstCharacter::ServerChatMessageMulticast_Validate(const FString& Message)
+{
+	if (Message.Len() < 255)
+	{
+		return true;
+	}
+	else return false;
+}
+
 
 void AFirstCharacter::OnRep_CurrentMessage()
 {

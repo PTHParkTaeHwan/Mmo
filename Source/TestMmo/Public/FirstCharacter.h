@@ -64,6 +64,26 @@ private:
 	void SeverSendChatMessage_Implementation(const FString& Message);
 	bool SeverSendChatMessage_Validate(const FString& Message);
 	
+	UFUNCTION(Reliable, Server, WithValidation)
+	void SeverSendChatMessage2(const FString& Message);
+	void SeverSendChatMessage2_Implementation(const FString& Message);
+	bool SeverSendChatMessage2_Validate(const FString& Message);
+
+	UFUNCTION(Reliable, NetMulticast, WithValidation)
+	void ServerChatMessageMulticast(const FString& Message);
+	void ServerChatMessageMulticast_Implementation(const FString& Message);
+	bool ServerChatMessageMulticast_Validate(const FString& Message);
+
+	void CreatMessageWidget();
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class UMessageWidget> MessageWidgetClass;
+
+	UPROPERTY()
+	class UMessageWidget* MessageWidget;
+
+
 
 	UFUNCTION()
 	void OnRep_CurrentMessage();

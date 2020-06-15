@@ -5,16 +5,25 @@
 #include "Components/WidgetComponent.h"
 #include "ChatWidget.h"
 #include "UObject/ConstructorHelpers.h"
+#include "MessageWidget.h"
+
 
 
 AMyPlayerController::AMyPlayerController()
 {
 	
-	/*static ConstructorHelpers::FClassFinder<UChatWidget> UI_CHAT_C(TEXT("/Game/Dev/TestBox.TestBox_C"));
+	static ConstructorHelpers::FClassFinder<UChatWidget> UI_CHAT_C(TEXT("WidgetBlueprint'/Game/Dev/HUDWidget.HUDWidget_C'"));
 	if (UI_CHAT_C.Succeeded())
 	{
 		HUDChatWidgetClass = UI_CHAT_C.Class;
-	}*/
+	}
+
+	static ConstructorHelpers::FClassFinder<UMessageWidget> UI_MESSAGE_C(TEXT("/Game/Dev/Message.Message_C"));
+	if (UI_MESSAGE_C.Succeeded())
+	{
+		MessageWidgetClass = UI_MESSAGE_C.Class;
+	}
+
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -62,7 +71,13 @@ bool AMyPlayerController::WidgetSpawnNetMulticast_Validate()
 
 void AMyPlayerController::OnChatPause()
 {
-	//SetInputMode(UIInputMode);
-	//bShowMouseCursor = true;
+	HUDChatWidget = CreateWidget<UChatWidget>(this, HUDChatWidgetClass);
+	HUDChatWidget->AddToViewport(3);
+	SetInputMode(UIInputMode);
+	bShowMouseCursor = true;
+
+	MessageWidget = CreateWidget<UMessageWidget>(this, MessageWidgetClass);
+	MessageWidget->AddToViewport(3);
+
 
 }

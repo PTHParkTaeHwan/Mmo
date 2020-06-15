@@ -35,8 +35,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class UChatWidget> HUDChatWidgetClass;
 
-
-
 private:
 	UPROPERTY()
 	class UChatWidget* HUDChatWidget;
@@ -47,4 +45,11 @@ private:
 	FInputModeUIOnly UIInputMode;
 
 	bool bChatMode;
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class UMessageWidget> MessageWidgetClass;
+
+	UPROPERTY()
+	class UMessageWidget* MessageWidget;
 };

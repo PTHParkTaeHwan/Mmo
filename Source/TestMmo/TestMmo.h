@@ -4,6 +4,7 @@
 
 #include "EngineMinimal.h"
 #include "Net/UnrealNetwork.h"
+#include <vector>
 
 DECLARE_LOG_CATEGORY_EXTERN(TestMmo, Log, All);
 #define TLOG_CALLINFO (FString(__FUNCTION__) + TEXT("(") + FString::FromInt(__LINE__)+TEXT(")"))
